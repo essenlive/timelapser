@@ -1,0 +1,35 @@
+{
+  "name": "timelapser",
+  "version": "0.0.1",
+  "description": "A simple node app for running a photo timelapse machine",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "modprobe i2c-dev && node loop.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/essenlive/timelapser.git"
+  },
+  "keywords": [
+    "pi",
+    "raspberry",
+    "node"
+  ],
+  "author": "David Ernsting",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "homepage": "https://github.com/",
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "fluent-ffmpeg": "^2.1.2",
+    "johnny-five": "^1.0.0",
+    "node-raspistill": "0.0.20",
+    "node-webcam": "^0.5.0",
+    "pad-number": "0.0.4",
+    "raspi-io": "^10.0.4",
+    "videoshow": "^0.1.11"
+  }
+}
