@@ -9,7 +9,7 @@ let dir = './photos';
 if (!fs.existsSync(dir))fs.mkdirSync(dir);
 
 
-const takePicture = (imageWidth, imageHeight,id)=>{
+const takePicture = (imageWidth, imageHeight,id=0)=>{
 
     // Define options
     const Webcam = NodeWebcam.create({
