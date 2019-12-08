@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "modprobe i2c-dev && node loop.js"
+    "start": "node index.js",
+    "wait": "node loop.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,9 @@
     "node-raspistill": "0.0.20",
     "node-webcam": "^0.5.0",
     "pad-number": "0.0.4",
-    "raspi-io": "^10.0.4",
     "videoshow": "^0.1.11"
+  },
+  "optionalDependencies ": {
+    "raspi-io": "^10.0.4"
   }
 }
