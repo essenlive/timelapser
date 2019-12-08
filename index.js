@@ -3,7 +3,7 @@ const createTimelapse = require('./createTimelapse.js')
 const sleep = require('util').promisify(setTimeout)
 
 // Settings to be defined manually later on
-let duration = [0,0,1,0];
+let duration = [0,0,0,30];
 let lapse = 2000;
 let imageWidth = 1280;
 let imageHeight = 720;

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "modprobe i2c-dev && node loop.js"
+    "start": "node index.js",
+    "loop": "node loop.js"
   },
   "repository": {
     "type": "git",
