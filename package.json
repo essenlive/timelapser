@@ -26,11 +26,12 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^8.1.0",
     "johnny-five": "^1.0.0",
     "node-raspistill": "0.0.20",
     "node-webcam": "^0.5.0",
     "pad-number": "0.0.4",
-    "videoshow": "^0.1.11",
-    "raspi-io": "^10.0.4"
+    "raspi-io": "^10.0.4",
+    "videoshow": "^0.1.11"
   }
 }

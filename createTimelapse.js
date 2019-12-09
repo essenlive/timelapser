@@ -6,7 +6,7 @@
 const videoshow = require('videoshow')
 
 
-const createTimelapse = (imageWidth, imageHeight, images)=>{
+const createTimelapse = (images)=>{
 
     // Define options
 
@@ -16,7 +16,7 @@ const createTimelapse = (imageWidth, imageHeight, images)=>{
         transition: false,
         videoBitrate: 1024,
         videoCodec: 'libx264',
-        size: `${imageWidth}x${imageHeight}`,
+        size: "1280x720",
         audioBitrate: '128k',
         audioChannels: 2,
         format: 'mp4',
