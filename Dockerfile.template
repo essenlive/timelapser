@@ -6,7 +6,7 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-node:10-stretch-build
 
 # use `install_packages` if you need to install dependencies,
 # for instance if you need git, just uncomment the line below.
-RUN install_packages git dnsmasq wireless-tools usbutils apt-utils fswebcam ffmpeg pigpio python make gcc g++ build-essential  
+RUN install_packages git dnsmasq wireless-tools usbutils apt-utils ffmpeg pigpio python make gcc g++ build-essential  
 
 # Defines our working directory in container
 WORKDIR /usr/src/app

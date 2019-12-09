@@ -14,21 +14,10 @@ if (!fs.existsSync(dir))fs.mkdirSync(dir);
 const takePicture = (id=0)=>{
 
     // Define options
-    // const Webcam = NodeWebcam.create({
-    //     width: imageWidth,
-    //     height: imageHeight,
-    //     quality: 100,
-    //     delay: 0,
-    //     saveShots: true,
-    //     output: "jpeg",
-    //     device: false,
-    //     callbackReturn: "location",
-    //     verbose: false
-    // });
-
     camera.setOptions({
         width: 1280,
-        height: 720
+        height: 720,
+        rotation: 90
     });
 
 
@@ -39,11 +28,6 @@ const takePicture = (id=0)=>{
         }).catch((err) => {
             reject(err)
         });
-
-        // Webcam.capture(`./photos/img-${pad(id, 4)}.jpg`, (err, data) => {
-        //     if (err !== null) reject(err);
-        //     else resolve(data);
-        // });
 
     });
 }

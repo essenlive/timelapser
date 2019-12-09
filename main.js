@@ -3,6 +3,8 @@ const five = require('johnny-five');
 const timeLoop = require('./timeLoop.js')
 const pad = require('pad-number');
 const createTimelapse = require('./createTimelapse.js')
+const upload = require('./upload.js')
+
 const board = new five.Board({
     io: new Raspi(),
     repl: false
@@ -83,15 +85,25 @@ board.on('ready', () => {
             console.log(`Timelapse started : ${new Date()}`);
             console.log(`Duration : ${duration / 1000} seconds`);
             console.log(`Number of frames : ~ ${duration / lapse}`);
+            // lcd.print("----------------                        ----------------");
             lcd.clear();
-            lcd.print("----------------                        ----------------");
+            lcd.print("Taking                                  Pictures        ");
             let photos = await timeLoop(duration, lapse)
-            lcd.print("Building                                Timelapse       ");
             lcd.clear();
-            console.log(`Buildng Timelapse started`);
+            lcd.print("Building                                Timelapse       ");
+            console.log(`-----------------------------------`);
+            console.log(`Rendering Timelapse`);
             try {
                 let result = await createTimelapse(photos);
-                console.log(result);
+                console.log(`-----------------------------------`);
+                console.log("Timelapse rendered : ",result);
+                lcd.clear();
+                lcd.print("Timelapse                               Rendered        ");
+                let body = JSON.parse(await upload(result));
+                console.log(`-----------------------------------`);
+                console.log("Timelapse uploaded : ",body.shortcode);
+                lcd.clear();
+                lcd.print(`Timelapse                               Uploaded ${body.shortcode}`);
             } catch (error) {
                 console.log(error)
             }
