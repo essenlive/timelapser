@@ -81,14 +81,21 @@ board.on('ready', () => {
             + options[3].value * 1000;
             let lapse = options[4].value * 60 * 1000 
             + options[5].value * 1000;
+            let start = new Date(), index = 0, frames = Math.floor(duration / lapse);
             console.log(`-----------------------------------`);
-            console.log(`Timelapse started : ${new Date()}`);
+            console.log(`Timelapse started : ${start}`);
             console.log(`Duration : ${duration / 1000} seconds`);
-            console.log(`Number of frames : ~ ${duration / lapse}`);
+            console.log(`Number of frames : ~ ${frames}`);
             // lcd.print("----------------                        ----------------");
             lcd.clear();
-            lcd.print("Taking                                  Pictures        ");
+            lcd.print(`Started at ${pad(start.getHours()+1,2)}:${pad(start.getMinutes(),2)}                        Pic    ${pad(index,4)}/${pad(frames,4)}`);
+            let update = setInterval(() => {
+                index++;
+                lcd.clear();
+                lcd.print(`Started at ${pad(start.getHours()+1,2)}:${pad(start.getMinutes(),2)}                        Pic    ${pad(index,4)}/${pad(frames,4)}`);
+            }, lapse);
             let photos = await timeLoop(duration, lapse)
+            clearInterval(update);
             lcd.clear();
             lcd.print("Building                                Timelapse       ");
             console.log(`-----------------------------------`);
