@@ -25,6 +25,7 @@
   "homepage": "https://github.com/",
   "dependencies": {
     "@babel/runtime": "^7.5.5",
+    "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^8.1.0",
     "johnny-five": "^1.0.0",
