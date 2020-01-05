@@ -1,41 +1,29 @@
-
-let state = {
-    view : {
-        step : "connection",
-        status : "available",
-        setting : "days"
-    },
+const state = {
     pictures : {
         frames : [],
         interval : null
     },
     setup: {
-        days: {
-            value: 0,
-            bounds: [0, 7]
+        options : {
+            hours: {
+                value: 0,
+                bounds: [0, 23],
+                cursor : [1,8]
+            },
+            minutes: {
+                value: 0,
+                bounds: [0, 59],
+                cursor: [1, 11]
+            },
+            seconds: {
+                value: 10,
+                bounds: [0, 59],
+                cursor: [1, 14]
+            }
         },
-        hours: {
-            value: 0,
-            bounds: [0, 23]
-        },
-        minutes: {
-            value: 2,
-            bounds: [0, 59]
-        },
-        seconds: {
-            value: 0,
-            bounds: [0, 59]
-        },
-        lapseMinutes: {
-            value: 0,
-            bounds: [0, 59],
-        },
-        lapseSeconds : {
-            value: 10,
-            bounds: [0, 59],
-        }
-    }
+        selection : 'hours'
+    },
+    data : 0
 }
-
-
+    
 module.exports = state;

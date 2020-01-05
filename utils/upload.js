@@ -9,8 +9,8 @@ const upload = (path='./photos/export.mp4')=>{
         method: 'POST',
         uri: 'https://api.streamable.com/upload',
         auth: {
-        'user': 'perchais.quentin@gmail.com',
-        'pass': '151190'
+            'user': process.env.SB_USER,
+            'pass': process.env.SB_PASS
         },
         formData: {
             file: {
