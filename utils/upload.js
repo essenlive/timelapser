@@ -2,7 +2,7 @@ const rp = require('request-promise');
 const fs = require("fs");
 const pad = require('pad-number');
 
-const upload = (path='./photos/export.mp4')=>{
+const upload = (path)=>{
     let date = new Date;
 
     let options = {
@@ -25,7 +25,8 @@ const upload = (path='./photos/export.mp4')=>{
 
     return new Promise((resolve, reject)=>{
         rp(options).then((body)=>{
-            resolve(body);
+            let res = JSON.parse(body);
+            resolve(res.shortcode);
         })
         .catch(function (err) {
             reject(err)

@@ -1,56 +1,49 @@
 const pad = require('pad-number');
+const fs = require('fs-extra');
 const LCD = require('./LCD.js');
 const rebound = require('./utils/rebound.js');
+const Camera = require("./utils/camera.js");
+const createTimelapse = require("./utils/createTimelapse.js");
+const upload = require('./utils/upload.js');
 
 
 const routes = {
     setup: {
         controls: {
-            a: {
-                release: () => {
-                    LCD.route("startConfirmation")
-                },
-                hold: () => {
-                    LCD.route("pictures")
-                }
+            aRelease: () => { LCD.route("startConfirmation") },
+            aHold: () => {LCD.route("pictures")},
+            bRelease: () => {
+                let state = LCD.state;
+                let value = state.setup.options[LCD.state.setup.selection].value + 1;
+                value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
+                state.setup.options[LCD.state.setup.selection].value = value;
+                LCD.setState(state)
             },
-            b: {
-                release: () => {
-                    let state = LCD.state;
-                    let value = state.setup.options[LCD.state.setup.selection].value + 1;
-                    value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
-                    state.setup.options[LCD.state.setup.selection].value = value;
-                    LCD.setState(state)
-                },
-                hold: () => {
-                    let state = LCD.state;
-                    let options = Object.keys(LCD.state.setup.options);
-                    let index = options.indexOf(LCD.state.setup.selection) + 1;
-                    index = rebound(index, [0, options.length - 1]);
-                    state.setup.selection = options[index];
-                    LCD.setState(state)
-                }
+            bHold: () => {
+                let state = LCD.state;
+                let options = Object.keys(LCD.state.setup.options);
+                let index = options.indexOf(LCD.state.setup.selection) + 1;
+                index = rebound(index, [0, options.length - 1]);
+                state.setup.selection = options[index];
+                LCD.setState(state)
             },
-            c: {
-                release: () => {
-                    let state = LCD.state;
-                    let value = state.setup.options[LCD.state.setup.selection].value - 1;
-                    value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
-                    state.setup.options[LCD.state.setup.selection].value = value;
-                    LCD.setState(state)
-                },
-                hold: () => {
-                    let state = LCD.state;
-                    let options = Object.keys(LCD.state.setup.options);
-                    let index = options.indexOf(LCD.state.setup.selection) - 1;
-                    index = rebound(index, [0, options.length - 1]);
-                    state.setup.selection = options[index];
-                    LCD.setState(state)
-                }
+            cRelease: () => {
+                let state = LCD.state;
+                let value = state.setup.options[LCD.state.setup.selection].value - 1;
+                value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
+                state.setup.options[LCD.state.setup.selection].value = value;
+                LCD.setState(state)
+            },
+            cHold: () => {
+                let state = LCD.state;
+                let options = Object.keys(LCD.state.setup.options);
+                let index = options.indexOf(LCD.state.setup.selection) - 1;
+                index = rebound(index, [0, options.length - 1]);
+                state.setup.selection = options[index];
+                LCD.setState(state)
             }
         },
-        init: () => {
-        },
+        init: () => {},
         render: () => {
             return {
                 cursor: LCD.state.setup.options[LCD.state.setup.selection].cursor,
@@ -63,35 +56,36 @@ const routes = {
     },
     pictures: {
         controls: {
-            a: {
-                release: () => {
-                    LCD.route('buildConfirmation')
-                },
-                hold: () => {}
-            },
-            b: {
-                release: () => { },
-                hold: () => { }
-            },
-            c: {
-                release: () => {},
-                hold: () => { }
-            }
+            aRelease: () => { LCD.route('buildConfirmation') },
         },
-        init: () => {
+        init: async() => {
+
+            // Stop now if current loop already exist
+            if (LCD.state.pictures.interval) return
 
             let state = LCD.state;
             let lapse = state.setup.options["hours"].value * 60 * 60 * 1000
                 + state.setup.options["minutes"].value * 60 * 1000
                 + state.setup.options["seconds"].value * 1000;
-            if (state.pictures.interval) return
-            state.pictures.start = new Date()
-            state.pictures.interval = setInterval(() => {
-                // let data = await takePicture(photos.length);
-                state.pictures.frames.push('0');
-                LCD.setState(state);
-                
-            }, lapse - 5000 < 0 ? 0 : lapse - 6000)
+
+            // Check if image folder exists or create it if not and reset frame array
+            state.pictures.start = new Date();
+            state.pictures.frames = [];
+            if (!fs.existsSync(state.pictures.dir)) fs.mkdirSync(state.pictures.dir);
+            await fs.emptyDir(state.pictures.dir);
+
+            // Setup picture taking loop
+            const takePicture = async () => {
+                try {
+                    state.pictures.frames.push(await Camera.takePicture(state.pictures.frames.length));
+                    LCD.setState(state);
+                } catch (error) {
+                    console.log("ERROR : ", error);
+                }
+
+            }
+            takePicture();
+            state.pictures.interval = setInterval(takePicture, lapse - 5000 < 0 ? 0 : lapse - 6000) // Remove time for picture from lapse
         },
         render: () => {
             return {
@@ -105,56 +99,56 @@ const routes = {
     },
     startConfirmation: {
         controls: {
-            a: {
-                release: () => {
-                    LCD.route("pictures")
-                },
-                hold: () => { }
-            },
-            b: {
-                release: () => {
-                    LCD.route("setup")},
-                hold: () => { }
-            },
-            c: {
-                release: () => {
-                    LCD.route("setup")
-                },
-                hold: () => { }
-            }
+            aRelease: () => {LCD.route("pictures")},
+            aHold: () => {LCD.route("setup");}
         },
+        init: () => {},
+        render: () => {
+            return {
+                cursor: null,
+                lines: [
+                    `PRESS TO START`,
+                    `LONG TO ABORT`
+                ]
+            }
+        }
+    },
+    errorCam: {
+        controls: {},
         init: () => {
+            let state = LCD.state;
+            let load = ["+---", "-+--", "--+-", "---+", "--+-", "-+--"], i = 1;
+            let scan = setInterval(async()=>{
+                state.error = load[i++%load.length]
+                try {
+                    state.pictures.initialized = await Camera.init(state.pictures.dir);
+                    LCD.route('setup');
+                    clearInterval(scan);
+                } catch (error) {
+                    console.log("ERROR : ", error);
+                }
+                LCD.setState(state);
+            },100)
         },
         render: () => {
             return {
                 cursor: null,
                 lines: [
-                    `PRESS AGAIN TO`,
-                    `START`
+                    `CHECK CAMERA`,
+                    `SCANNING  ${LCD.state.error}`
                 ]
             }
         }
     },
     buildConfirmation: {
         controls: {
-            a: {
-                release: () => {
-                    if (LCD.state.pictures.interval) clearInterval(LCD.state.pictures.interval);
-                    LCD.state.pictures.interval = null;
-                    LCD.setState(LCD.state)
-                    LCD.route("build")
-                },
-                hold: () => {
-                    LCD.route("pictures")}
+            aRelease: () => {
+                if (LCD.state.pictures.interval) clearInterval(LCD.state.pictures.interval);
+                LCD.state.pictures.interval = null;
+                LCD.setState(LCD.state)
+                LCD.route("build")
             },
-            b: {
-                release: () => { },
-                hold: () => { }
-            },
-            c: {
-                release: () => { },
-                hold: () => { }
-            }
+            aHold: () => { LCD.route("pictures")},
         },
         init: () => {
         },
@@ -169,25 +163,17 @@ const routes = {
         }
     },
     build: {
-        controls: {
-            a: {
-                release: () => {
-                },
-                hold: () => { }
-            },
-            b: {
-                release: () => { },
-                hold: () => { }
-            },
-            c: {
-                release: () => { },
-                hold: () => { }
-            }
-        },
-        init: () => {
-            setTimeout(() => {
+        controls: {},
+        init: async() => {
+            try {
+                let state = LCD.state;
+                state.timelapse = await createTimelapse(state.pictures.frames);
+                LCD.setState(state);
                 LCD.route("upload")
-            }, 3000)
+            }
+            catch(error){
+                console.log(error);
+            }
         },
         render: () => {
             return {
@@ -199,31 +185,41 @@ const routes = {
             }
         },
     },
+    errorBuild: {
+        controls: {
+            aRelease: () => {
+                LCD.route('setup')
+            },
+        },
+        init: () => {},
+        render: () => {
+            return {
+                cursor: null,
+                lines: [
+                    `ERROR BUILDING`,
+                    `TIMELAPSE`
+                ]
+            }
+        }
+    },
     upload: {
         controls: {
-            a: {
-                release: () => {
-                    LCD.route("setup")
-                },
-                hold: () => { }
-            },
-            b: {
-                release: () => { },
-                hold: () => { }
-            },
-            c: {
-                release: () => { },
-                hold: () => { }
-            }
+            aRelease: () => { LCD.route('setup'); },
         },
-        init: () => {
+        init: async () => {
+            let state = LCD.state;
+            try {
+                state.upload = await upload(state.timelapse);
+                LCD.setState(state);
+            }
+            catch (error) { console.log(error); }
         },
         render: () => {
             return {
                 cursor: null,
                 lines: [
-                    `UPLOADING`,
-                    `TIMELAPSE`
+                    `UPLOADED`,
+                    `TIMELAPSE ${LCD.state.upload}`
                 ]
             }
         }
