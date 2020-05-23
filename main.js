@@ -16,8 +16,8 @@ board.on('ready', () => {
     const buttonC = new five.Button(3);
     
     LCD.init(fiveLcd, state, routes);
-    // LCD.route("errorCam");
-    LCD.route("setup");
+    LCD.route("errorCam");
+    //LCD.route("setup");
 
     buttonA.on("release", () => {
         if (hold) { hold = false; return }
