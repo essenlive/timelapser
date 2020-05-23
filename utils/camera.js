@@ -41,6 +41,12 @@ const Camera = {
             if (gphoto.gp_file_new(destPtr) < 0) reject("Could not create file");
             
             let dest = destPtr.deref();
+            console.log(Camera.camera);
+            console.log(path_folder);
+            console.log(path_name);
+            console.log(dest);
+            console.log( Camera.context);
+            
             res = gphoto.gp_camera_file_get(Camera.camera, path_folder, path_name, gphoto.GP_FILE_TYPE_NORMAL, dest, Camera.context);
             if (res < 0) reject(`Could not load image:\n${gphoto.gp_port_result_as_string(res)}`);
    
