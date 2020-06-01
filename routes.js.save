@@ -10,8 +10,7 @@ const upload = require('./utils/upload.js');
 const routes = {
     setup: {
         controls: (event) => {
-            let state, value, index;
-            switch (event) {
+exi            switch (event) {
                 case "aRelease":
                     LCD.route("startConfirmation");
                     break;
@@ -19,31 +18,31 @@ const routes = {
                     LCD.route("pictures");
                     break;
                 case "bRelease":
-                    state = LCD.state;
-                    value = state.setup.options[LCD.state.setup.selection].value + 1;
+                    let state = LCD.state;
+                    let value = state.setup.options[LCD.state.setup.selection].value + 1;
                     value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
                     state.setup.options[LCD.state.setup.selection].value = value;
                     LCD.setState(state)
                     break;
                 case "bHold":
-                    state = LCD.state;
-                    options = Object.keys(LCD.state.setup.options);
-                    index = options.indexOf(LCD.state.setup.selection) + 1;
+                    let state = LCD.state;
+                    let options = Object.keys(LCD.state.setup.options);
+                    let index = options.indexOf(LCD.state.setup.selection) + 1;
                     index = rebound(index, [0, options.length - 1]);
                     state.setup.selection = options[index];
                     LCD.setState(state)
                     break;
                 case "cRelease":
-                    state = LCD.state;
-                    value = state.setup.options[LCD.state.setup.selection].value - 1;
+                    let state = LCD.state;
+                    let value = state.setup.options[LCD.state.setup.selection].value - 1;
                     value = rebound(value, state.setup.options[LCD.state.setup.selection].bounds);
                     state.setup.options[LCD.state.setup.selection].value = value;
                     LCD.setState(state)
                     break;
                 case "cHold":
-                    state = LCD.state;
-                    options = Object.keys(LCD.state.setup.options);
-                    index = options.indexOf(LCD.state.setup.selection) - 1;
+                    let state = LCD.state;
+                    let options = Object.keys(LCD.state.setup.options);
+                    let index = options.indexOf(LCD.state.setup.selection) - 1;
                     index = rebound(index, [0, options.length - 1]);
                     state.setup.selection = options[index];
                     LCD.setState(state)

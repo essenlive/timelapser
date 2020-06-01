@@ -16,31 +16,31 @@ board.on('ready', () => {
     const buttonC = new five.Button(3);
     
     LCD.init(fiveLcd, state, routes);
-    LCD.route("errorCam");
-    //LCD.route("setup");
+    // LCD.route("errorCam");
+    LCD.route("setup");
 
     buttonA.on("release", () => {
         if (hold) { hold = false; return }
-        if (typeof (LCD.currentRoute.controls.aRelease)!=="undefined") LCD.currentRoute.controls.aRelease();
+        LCD.currentRoute.controls("aRelease");
     });
     buttonA.on("hold", () => {
-        if (typeof(LCD.currentRoute.controls.aHold) !== "undefined") LCD.currentRoute.controls.aHold();
+        LCD.currentRoute.controls("aHold");
         hold = true;
     });
     buttonB.on("release", () => {
         if (hold) { hold = false; return }
-        if (typeof(LCD.currentRoute.controls.bRelease) !== "undefined") LCD.currentRoute.controls.bRelease();
+        LCD.currentRoute.controls("bRelease");
     });
     buttonB.on("hold", () => {
-        if (typeof(LCD.currentRoute.controls.bHold) !== "undefined") LCD.currentRoute.controls.bHold();
+        LCD.currentRoute.controls("bHold");
         hold = true;
     });
     buttonC.on("release", () => {
         if (hold) { hold = false; return }
-        if (typeof(LCD.currentRoute.controls.cRelease) !== "undefined") LCD.currentRoute.controls.cRelease();
+        LCD.currentRoute.controls("cRelease");
     });
     buttonC.on("hold", () => {
-        if (typeof(LCD.currentRoute.controls.cHold) !== "undefined")LCD.currentRoute.controls.cHold();
+        LCD.currentRoute.controls("cHold");
         hold = true;
     });
 
