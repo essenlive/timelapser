@@ -12,7 +12,7 @@ const createTimelapse = (images)=>{
 
     const videoOptions = {
         fps: 25,
-        loop: 0.5, // seconds
+        loop: 0.2,
         transition: false,
         videoBitrate: 1024,
         videoCodec: 'libx264',
