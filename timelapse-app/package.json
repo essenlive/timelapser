@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^12.6.0",
     "autoprefixer": "^9.8.6",
     "image-sequencer": "git+https://github.com/ertdfgcvb/Sequencer.git",
-    "postcss": "^7.0.35",
+    "postcss": "^8.2.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
